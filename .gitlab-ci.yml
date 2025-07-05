@@ -1,0 +1,53 @@
+stages:
+  - dockerlogin
+  - namespace
+  - deployment
+  - service 
+  - persistentvolume
+  - persistentvolumeclaim
+
+docker_login_job:
+  stage: dockerlogin
+  script:
+    - echo "LOGIN INTO DOCKERHUB"
+    - docker login -u $DockerHubUser -p $DockerHubPass
+
+namespace_job:
+  stage: namespace
+  script:
+    - echo "This stage will create namespace for nginx"
+    - kubectl apply -f namespace.yml
+  tags:
+    - dev
+
+deployment_job:
+  stage: deployment
+  script:
+    - echo "This stage will deployed the nginx"
+    - kubectl apply -f Deployment.yml
+  tags:
+    - dev
+
+services_job:
+  stage: service
+  script:
+    - echo "This stage will create service for nginx"
+    - kubectl apply -f Services.yml
+  tags:
+    - dev
+
+persistentvolume_job:
+  stage: persistentvolume
+  script:
+    - echo "This stage will create persistent volume for nginx"
+    - kubectl apply -f persistentVolume
+  tags:
+    - dev
+
+persistentvolumeclaim_job:
+  stage: persistentvolumeclaim
+  script:
+    - echo "This stage will claim persistent volume for nginx"
+    - kubectl apply -f persistentVolumeClaim
+  tags:
+    - dev
